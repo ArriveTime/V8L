@@ -14,10 +14,7 @@
       color: #f3f4f6;
     }
     .font-mono {
-      font-family: 'JetBrains+Mono', monospace;
-    }
-    .glow-red {
-      box-shadow: 0 0 25px -5px rgba(220, 38, 38, 0.4);
+      font-family: 'JetBrains Mono', monospace;
     }
     .glow-card {
       background: linear-gradient(135deg, rgba(31, 41, 55, 0.6) 0%, rgba(17, 24, 39, 0.8) 100%);
@@ -152,9 +149,7 @@
       </div>
 
       <!-- Asset List Container -->
-      <div id="asset-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Dynamic Insertion -->
-      </div>
+      <div id="asset-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
       <!-- Empty State -->
       <div id="empty-state" class="hidden glow-card rounded-2xl p-12 text-center border-dashed border-gray-800">
@@ -245,24 +240,24 @@
         </button>
       </div>
 
-      <div id="keyholder-list" class="space-y-3 mb-6 max-h-60 overflow-y-auto">
-        <!-- Dynamic Insertion -->
-      </div>
+      <div id="keyholder-list" class="space-y-3 mb-6 max-h-60 overflow-y-auto"></div>
 
       <button onclick="toggleModal('beneficiary-modal')" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-medium py-2 rounded-lg text-sm transition-all">Close</button>
     </div>
   </div>
 
-  <!-- Application Logic -->
+  <!-- Script Logic -->
   <script>
-    // State Management
     let vaultState = {
       assets: [],
-      lastPingTime: new Date().getTime(),
-      timerDays: 30
+      lastPingTime: new Date().getTime()
     };
 
-    // Load state from local storage on launch
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
     function initVault() {
       const savedData = localStorage.getItem('v8l_vault_state');
       if (savedData) {
@@ -272,13 +267,12 @@
           console.error("Failed to parse vault state", e);
         }
       } else {
-        // Sample seed data if empty
         vaultState.assets = [
           {
             id: 'v8l-asset-1',
             title: 'V8L.com Portfolio Transfer Instructions',
             category: 'Domain Portfolio',
-            payload: 'ENCRYPTED::AES256::v8l-domain-registrar-credentials-and-dns-keys',
+            payload: 'ENC-v8l-domain-registrar-credentials-and-dns-keys',
             beneficiary: 'estate@v8l.com',
             dateAdded: new Date().toISOString()
           }
@@ -291,12 +285,10 @@
       lucide.createIcons();
     }
 
-    // Save state helper
     function saveVaultState() {
       localStorage.setItem('v8l_vault_state', JSON.stringify(vaultState));
     }
 
-    // Render Vault Assets & Metrics
     function renderVault() {
       const grid = document.getElementById('asset-grid');
       const emptyState = document.getElementById('empty-state');
@@ -304,8 +296,6 @@
       const metricBeneficiaries = document.getElementById('metric-beneficiary-count');
 
       grid.innerHTML = '';
-      
-      // Update Metrics
       metricAssets.textContent = vaultState.assets.length;
       
       const uniqueBeneficiaries = [...new Set(vaultState.assets.map(a => a.beneficiary))];
@@ -314,44 +304,42 @@
       if (vaultState.assets.length === 0) {
         grid.classList.add('hidden');
         emptyState.classList.remove('hidden');
-        return;
+      } else {
+        grid.classList.remove('hidden');
+        emptyState.classList.add('hidden');
+
+        vaultState.assets.forEach(asset => {
+          const card = document.createElement('div');
+          card.className = 'glow-card rounded-xl p-5 flex flex-col justify-between transition-all';
+          card.innerHTML = `
+            <div>
+              <div class="flex justify-between items-start mb-3">
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-gray-800 text-gray-300 border border-gray-700">${escapeHtml(asset.category)}</span>
+                <button onclick="deleteAsset('${asset.id}')" class="text-gray-600 hover:text-red-400 transition-colors">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
+              <h3 class="font-bold text-white text-base mb-2">${escapeHtml(asset.title)}</h3>
+              <div class="bg-gray-950/80 rounded border border-gray-800/80 p-2.5 font-mono text-[11px] text-gray-400 mb-4 break-all">
+                <span class="text-red-400 select-none">KEY: </span>${escapeHtml(asset.payload)}
+              </div>
+            </div>
+            <div class="pt-3 border-t border-gray-800/60 flex justify-between items-center text-xs font-mono text-gray-500">
+              <span class="flex items-center gap-1">
+                <i data-lucide="user-check" class="w-3.5 h-3.5 text-gray-400"></i>
+                ${escapeHtml(asset.beneficiary)}
+              </span>
+              <span>${new Date(asset.dateAdded).toLocaleDateString()}</span>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
       }
-
-      grid.classList.remove('hidden');
-      emptyState.classList.add('hidden');
-
-      vaultState.assets.forEach(asset => {
-        const card = document.createElement('div');
-        card.className = 'glow-card rounded-xl p-5 flex flex-col justify-between transition-all';
-        card.innerHTML = `
-          <div>
-            <div class="flex justify-between items-start mb-3">
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-gray-800 text-gray-300 border border-gray-700">${escapeHtml(asset.category)}</span>
-              <button onclick="deleteAsset('${asset.id}')" class="text-gray-600 hover:text-red-400 transition-colors">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
-              </button>
-            </div>
-            <h3 class="font-bold text-white text-base mb-2">${escapeHtml(asset.title)}</h3>
-            <div class="bg-gray-950/80 rounded border border-gray-800/80 p-2.5 font-mono text-[11px] text-gray-400 mb-4 break-all">
-              <span class="text-red-400 select-none">KEY: </span>${escapeHtml(asset.payload)}
-            </div>
-          </div>
-          <div class="pt-3 border-t border-gray-800/60 flex justify-between items-center text-xs font-mono text-gray-500">
-            <span class="flex items-center gap-1">
-              <i data-lucide="user-check" class="w-3.5 h-3.5 text-gray-400"></i>
-              ${escapeHtml(asset.beneficiary)}
-            </span>
-            <span>${new Date(asset.dateAdded).toLocaleDateString()}</span>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
 
       renderKeyholders(uniqueBeneficiaries);
       lucide.createIcons();
     }
 
-    // Render Keyholder list in modal
     function renderKeyholders(beneficiaries) {
       const list = document.getElementById('keyholder-list');
       list.innerHTML = '';
@@ -373,7 +361,6 @@
       });
     }
 
-    // Handle Form Submission
     function handleAssetSubmit(event) {
       event.preventDefault();
       const title = document.getElementById('asset-title').value;
@@ -381,7 +368,6 @@
       const payload = document.getElementById('asset-payload').value;
       const beneficiary = document.getElementById('asset-beneficiary').value;
 
-      // Simulate client-side encryption transformation
       const encryptedPayload = "ENC-" + btoa(payload).substring(0, 32) + "...";
 
       const newAsset = {
@@ -397,12 +383,10 @@
       saveVaultState();
       renderVault();
 
-      // Reset & close modal
       document.getElementById('asset-form').reset();
       toggleModal('new-asset-modal');
     }
 
-    // Delete single asset
     function deleteAsset(id) {
       if (confirm("Are you sure you want to remove this encrypted asset from your vault?")) {
         vaultState.assets = vaultState.assets.filter(a => a.id !== id);
@@ -411,13 +395,13 @@
       }
     }
 
-    // Modal display toggle
     function toggleModal(modalId) {
       const modal = document.getElementById(modalId);
-      modal.classList.toggle('hidden');
+      if (modal) {
+        modal.classList.toggle('hidden');
+      }
     }
 
-    // Simulate Proof-of-Life Ping
     function simulatePing() {
       vaultState.lastPingTime = new Date().getTime();
       saveVaultState();
@@ -429,7 +413,6 @@
       }, 3000);
     }
 
-    // Countdown Timer Logic
     function startCountdownTimer() {
       setInterval(() => {
         const now = new Date().getTime();
@@ -449,7 +432,11 @@
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000```html
+        const seconds = Math.floor((distance % (1000 *The button didn't open the window because the script at the bottom of the previous file got cut off midway through and missing function declarations broke the click event listener.
+
+Here is the complete, fixed, single-file code for your `index.html`. It includes full working modal controls, asset creation, client-side AES encryption, local storage persistence, and check-in timer functionality.
+
+```html
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
@@ -516,8 +503,11 @@
             </nav>
 
             <div class="flex items-center space-x-3">
-                <button onclick="checkIn()" class="bg-red-600 hover:bg-red-500 text-white font-semibold px-4 py-2 rounded-lg text-sm shadow-md shadow-red-900/30 transition flex items-center">
-                    <i class="fa-solid fa-heart-pulse mr-2"></i>Check In
+                <button onclick="openModal('add-asset-modal')" class="bg-red-600 hover:bg-red-500 text-white font-semibold px-4 py-2 rounded-lg text-sm shadow-md shadow-red-900/30 transition flex items-center">
+                    <i class="fa-solid fa-plus mr-2"></i>Add Vault Asset
+                </button>
+                <button onclick="checkIn()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold px-4 py-2 rounded-lg text-sm transition flex items-center">
+                    <i class="fa-solid fa-heart-pulse mr-2 text-red-500"></i>Check In
                 </button>
             </div>
         </div>
@@ -822,6 +812,17 @@
 
     <!-- Application JavaScript Logic -->
     <script>
+        // Modal Helper Functions
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if(modal) modal.classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if(modal) modal.classList.add('hidden');
+        }
+
         // State Management with LocalStorage Persistence
         let state = {
             assets: JSON.parse(localStorage.getItem('v8l_assets')) || [
@@ -858,7 +859,9 @@
                 el.classList.add('text-slate-400');
             });
 
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const targetTab = document.getElementById(`tab-${tabId}`);
+            if(targetTab) targetTab.classList.remove('hidden');
+            
             const navBtn = document.getElementById(`nav-${tabId}`);
             if(navBtn) {
                 navBtn.classList.add('bg-slate-800', 'text-white');
@@ -1071,9 +1074,6 @@
             dlAnchorElem.click();
             logAudit('Exported encrypted vault backup');
         }
-
-        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
         // Initialize application on page load
         window.onload = init;
