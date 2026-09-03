@@ -1,1082 +1,455 @@
+HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>V8L | Digital Vault & Legacy Infrastructure</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Safe Deposit Box</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(17, 24, 39, 0.7);
+      --border: rgba(255, 255, 255, 0.1);
+      --accent-cyan: #00f2fe;
+      --accent-emerald: #10b981;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #030712;
-      color: #f3f4f6;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(0, 242, 254, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
     }
-    .font-mono {
-      font-family: 'JetBrains Mono', monospace;
+
+    /* Navbar */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      background: rgba(11, 15, 25, 0.8);
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
-    .glow-card {
-      background: linear-gradient(135deg, rgba(31, 41, 55, 0.6) 0%, rgba(17, 24, 39, 0.8) 100%);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
     }
-    .glow-card:hover {
-      border-color: rgba(220, 38, 38, 0.3);
+
+    .vault-icon {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-emerald));
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 12px rgba(0, 242, 254, 0.3);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+      color: #0b0f19;
+      font-weight: 600;
+      padding: 0.6rem 1.25rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.25);
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+      width: 100%;
+    }
+
+    /* Hero Banner */
+    .hero {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--accent-emerald);
+      padding: 0.35rem 0.85rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.25rem;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background-color: var(--accent-emerald);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-emerald);
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(180deg, #ffffff 0%, #9ca3af 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 650px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Asset Category Pills / Examples */
+    .asset-types {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .type-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .type-card svg {
+      stroke: var(--accent-cyan);
+    }
+
+    /* Asset Grid Header */
+    .grid-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .grid-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Assets Grid */
+    .assets-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .asset-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .asset-card:hover {
+      border-color: rgba(0, 242, 254, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .asset-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .asset-tag {
+      font-size: 0.75rem;
+      font-family: monospace;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(0, 242, 254, 0.2);
+    }
+
+    .asset-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .asset-meta {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .asset-footer {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* Modal Styling */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: #111827;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 480px;
+      padding: 2rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 0.75rem;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      outline: none;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--accent-cyan);
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-red-600 selection:text-white">
+<body>
 
-  <!-- Navigation -->
-  <nav class="border-b border-gray-800 bg-gray-950/80 backdrop-blur-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="bg-red-600 text-white font-black text-xl px-3 py-1.5 rounded tracking-tighter shadow-lg shadow-red-600/30 flex items-center gap-1.5">
-          <i data-lucide="shield-lock" class="w-6 h-6"></i>
-          <span>V8L</span>
-        </div>
-        <span class="text-xs font-mono tracking-widest text-gray-400 uppercase border-l border-gray-800 pl-3">Digital Estate Protocol</span>
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <div class="vault-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0b0f19" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
       </div>
-      
-      <div class="flex items-center gap-4">
-        <span class="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          AES-256 Zero-Knowledge Active
-        </span>
-        <button onclick="toggleModal('new-asset-modal')" class="bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2 shadow-md shadow-red-600/20">
-          <i data-lucide="plus" class="w-4 h-4"></i>
-          <span>Add Vault Asset</span>
-        </button>
-      </div>
+      Digital Safe Deposit Box
     </div>
-  </nav>
+    <!-- Fixed Trigger: Both buttons now call openModal() directly -->
+    <button class="btn-primary" onclick="openModal()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      Add Asset
+    </button>
+  </header>
 
-  <!-- Main Content -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full flex-1">
-    
-    <!-- Hero / Status Banner -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
-      
-      <!-- Vault Status Card -->
-      <div class="lg:col-span-2 glow-card rounded-2xl p-6 relative overflow-hidden">
-        <div class="absolute -right-10 -bottom-10 w-60 h-60 bg-red-600/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
-          <div>
-            <h1 class="text-2xl font-bold text-white tracking-tight">System Status: Active Vault</h1>
-            <p class="text-gray-400 text-sm mt-1">Master Key Encrypted & Secured On-Device</p>
-          </div>
-          <button onclick="simulatePing()" class="bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 font-mono text-xs px-4 py-2.5 rounded-lg transition-all flex items-center justify-center gap-2">
-            <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i>
-            <span>Confirm Proof-of-Life Ping</span>
-          </button>
+  <main>
+    <!-- Hero / Explanation Section -->
+    <section class="hero">
+      <div class="status-badge">
+        <span class="status-dot"></span> AES-256 Encrypted Protocol
+      </div>
+      <h1>Ultra-Secure Digital Asset Vault</h1>
+      <p>
+        Protect, conceal, and store high-value digital property with zero-knowledge, cryptographic privacy. 
+        Your digital assets remain completely secure and accessible only by your private key.
+      </p>
+
+      <!-- Supported Examples -->
+      <div class="asset-types">
+        <div class="type-card">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line></svg>
+          Domain Names
         </div>
-
-        <!-- Dead Man Switch Counter -->
-        <div class="bg-gray-950/60 rounded-xl p-5 border border-gray-800/80">
-          <div class="flex justify-between items-center mb-2">
-            <span class="text-xs font-mono text-gray-400 uppercase tracking-wider">Dead-Man Switch Trigger Timer</span>
-            <span id="ping-status" class="text-xs font-mono text-emerald-400 font-semibold">Status: Verified Today</span>
-          </div>
-          <div class="grid grid-cols-4 gap-2 text-center my-3">
-            <div class="bg-gray-900 border border-gray-800 p-2 rounded-lg">
-              <span id="timer-days" class="text-xl sm:text-2xl font-bold font-mono text-white">30</span>
-              <span class="block text-[10px] text-gray-500 font-mono uppercase">Days</span>
-            </div>
-            <div class="bg-gray-900 border border-gray-800 p-2 rounded-lg">
-              <span id="timer-hours" class="text-xl sm:text-2xl font-bold font-mono text-white">00</span>
-              <span class="block text-[10px] text-gray-500 font-mono uppercase">Hours</span>
-            </div>
-            <div class="bg-gray-900 border border-gray-800 p-2 rounded-lg">
-              <span id="timer-mins" class="text-xl sm:text-2xl font-bold font-mono text-white">00</span>
-              <span class="block text-[10px] text-gray-500 font-mono uppercase">Mins</span>
-            </div>
-            <div class="bg-gray-900 border border-gray-800 p-2 rounded-lg">
-              <span id="timer-secs" class="text-xl sm:text-2xl font-bold font-mono text-white">00</span>
-              <span class="block text-[10px] text-gray-500 font-mono uppercase">Secs</span>
-            </div>
-          </div>
-          <p class="text-xs text-gray-500 flex items-center gap-1.5 mt-2">
-            <i data-lucide="info" class="w-3.5 h-3.5 text-gray-400"></i>
-            If no check-in is received within 30 days, emergency instructions & assets unlock for designated beneficiaries.
-          </p>
+        <div class="type-card">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+          Encrypted Data & Files
+        </div>
+        <div class="type-card">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          Private Keys & Credentials
         </div>
       </div>
+    </section>
 
-      <!-- Quick Metrics -->
-      <div class="glow-card rounded-2xl p-6 flex flex-col justify-between">
-        <div>
-          <h2 class="text-sm font-mono text-gray-400 uppercase tracking-wider mb-4">Vault Overview</h2>
-          <div class="space-y-4">
-            <div class="flex justify-between items-center pb-3 border-b border-gray-800">
-              <span class="text-gray-300 text-sm">Indexed Assets</span>
-              <span id="metric-asset-count" class="font-mono text-lg font-bold text-white">0</span>
-            </div>
-            <div class="flex justify-between items-center pb-3 border-b border-gray-800">
-              <span class="text-gray-300 text-sm">Designated Keyholders</span>
-              <span id="metric-beneficiary-count" class="font-mono text-lg font-bold text-white">0</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-300 text-sm">Encryption Standard</span>
-              <span class="font-mono text-xs text-red-400 bg-red-950/50 border border-red-800/50 px-2 py-1 rounded">AES-GCM 256</span>
-            </div>
-          </div>
+    <!-- Vault Contents -->
+    <section>
+      <div class="grid-header">
+        <div class="grid-title">
+          Stored Assets
         </div>
-        <button onclick="toggleModal('beneficiary-modal')" class="mt-6 w-full bg-gray-800 hover:bg-gray-700 text-white font-medium py-2.5 rounded-lg text-sm transition-all border border-gray-700 flex items-center justify-center gap-2">
-          <i data-lucide="users" class="w-4 h-4"></i>
-          <span>Manage Keyholders</span>
+        <button class="btn-primary" style="background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border); box-shadow: none;" onclick="openModal()">
+          + Add New Asset
         </button>
       </div>
 
-    </div>
-
-    <!-- Asset Directory Section -->
-    <div class="mb-10">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <div>
-          <h2 class="text-xl font-bold text-white">Encrypted Digital Vault</h2>
-          <p class="text-gray-400 text-sm">Manage domain portfolios, emergency instructions, credentials, and digital property.</p>
+      <div class="assets-grid">
+        <!-- Sample Asset 1 -->
+        <div class="asset-card">
+          <div class="asset-header">
+            <div>
+              <div class="asset-name">premium-domain.com</div>
+              <div class="asset-meta">Domain Asset • Vault #01</div>
+            </div>
+            <span class="asset-tag">PROTECTED</span>
+          </div>
+          <div class="asset-footer">
+            <span>Hash: 0x8F...A391</span>
+            <span>AES-256</span>
+          </div>
         </div>
-        <div class="flex items-center gap-2">
-          <button onclick="exportVaultData()" class="bg-gray-900 hover:bg-gray-800 text-gray-300 border border-gray-800 text-xs px-3 py-2 rounded-lg font-mono flex items-center gap-1.5 transition-all">
-            <i data-lucide="download" class="w-3.5 h-3.5"></i>
-            Export Vault
-          </button>
-          <button onclick="clearVaultData()" class="bg-red-950/30 hover:bg-red-900/50 text-red-400 border border-red-900/50 text-xs px-3 py-2 rounded-lg font-mono flex items-center gap-1.5 transition-all">
-            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-            Reset
-          </button>
+
+        <!-- Sample Asset 2 -->
+        <div class="asset-card">
+          <div class="asset-header">
+            <div>
+              <div class="asset-name">Cold_Storage_Backup.dat</div>
+              <div class="asset-meta">Encrypted File • 4.2 MB</div>
+            </div>
+            <span class="asset-tag">HIDDEN</span>
+          </div>
+          <div class="asset-footer">
+            <span>Hash: 0x3C...E912</span>
+            <span>AES-256</span>
+          </div>
         </div>
       </div>
-
-      <!-- Asset List Container -->
-      <div id="asset-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-
-      <!-- Empty State -->
-      <div id="empty-state" class="hidden glow-card rounded-2xl p-12 text-center border-dashed border-gray-800">
-        <div class="w-16 h-16 bg-gray-900 text-gray-600 rounded-full flex items-center justify-center mx-auto mb-4 border border-gray-800">
-          <i data-lucide="lock" class="w-8 h-8"></i>
-        </div>
-        <h3 class="text-lg font-medium text-white mb-1">Your Digital Vault is Empty</h3>
-        <p class="text-gray-400 text-sm max-w-md mx-auto mb-6">Index critical domain names, administrative credentials, intellectual property, or legacy instructions to get started.</p>
-        <button onclick="toggleModal('new-asset-modal')" class="bg-red-600 hover:bg-red-700 text-white font-medium px-5 py-2.5 rounded-lg text-sm transition-all inline-flex items-center gap-2">
-          <i data-lucide="plus" class="w-4 h-4"></i>
-          <span>Add Your First Asset</span>
-        </button>
-      </div>
-    </div>
-
+    </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="border-t border-gray-900 bg-gray-950/50 py-6 text-center text-xs text-gray-600 font-mono">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-      <p>&copy; 2026 V8L.com (V8 Lock Digital Estate Protocol). All rights reserved.</p>
-      <div class="flex gap-4">
-        <span>Zero-Knowledge Storage</span>
-        <span>&bull;</span>
-        <span>Client-Side AES Encryption</span>
+  <!-- Add Asset Modal -->
+  <div class="modal-overlay" id="assetModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Deposit Digital Asset</h3>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
       </div>
-    </div>
-  </footer>
-
-  <!-- Modal: Add New Asset -->
-  <div id="new-asset-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-gray-900 border border-gray-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
-      <div class="flex justify-between items-center pb-4 border-b border-gray-800 mb-4">
-        <h3 class="text-lg font-bold text-white flex items-center gap-2">
-          <i data-lucide="file-plus" class="w-5 h-5 text-red-500"></i>
-          Index New Asset to Vault
-        </h3>
-        <button onclick="toggleModal('new-asset-modal')" class="text-gray-500 hover:text-white">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-
-      <form id="asset-form" onsubmit="handleAssetSubmit(event)" class="space-y-4">
-        <div>
-          <label class="block text-xs font-mono text-gray-400 mb-1">ASSET NAME / TITLE</label>
-          <input type="text" id="asset-title" placeholder="e.g., V8L.com Portfolio Assets" required class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-red-500">
-        </div>
-
-        <div>
-          <label class="block text-xs font-mono text-gray-400 mb-1">ASSET CATEGORY</label>
-          <select id="asset-category" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-red-500">
-            <option value="Domain Portfolio">Domain Portfolio / Digital Web Platforms</option>
-            <option value="Administrative Access">Administrative Credentials / Server Keys</option>
-            <option value="Legal & Estate">Legal & Estate Documentation</option>
-            <option value="Personal Archive">Personal Archive / Private Instructions</option>
+      <form onsubmit="event.preventDefault(); closeModal();">
+        <div class="form-group">
+          <label>Asset Type</label>
+          <select>
+            <option>Domain Name</option>
+            <option>Electronic Data / File</option>
+            <option>Cryptographic Key / Seed Phrase</option>
+            <option>Sensative Credential</option>
           </select>
         </div>
-
-        <div>
-          <label class="block text-xs font-mono text-gray-400 mb-1">SECURE ENCRYPTED PAYLOAD</label>
-          <textarea id="asset-payload" rows="4" placeholder="Enter sensitive instructions, access credentials, transfer keys, or private notes..." required class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3.5 py-2 text-sm text-white font-mono text-xs focus:outline-none focus:border-red-500"></textarea>
-          <p class="text-[11px] text-gray-500 mt-1">Payload is encrypted client-side prior to local vault commit.</p>
+        <div class="form-group">
+          <label>Asset Label / Identifier</label>
+          <input type="text" placeholder="e.g. MyDomain.com or Key_Backup" required />
         </div>
-
-        <div>
-          <label class="block text-xs font-mono text-gray-400 mb-1">ASSIGNED BENEFICIARY KEYHOLDER</label>
-          <input type="email" id="asset-beneficiary" placeholder="beneficiary@domain.com" required class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-red-500">
+        <div class="form-group">
+          <label>Secret Payload / File Hash</label>
+          <input type="password" placeholder="Encrypted value or sensitive string" required />
         </div>
-
-        <div class="pt-4 flex gap-3">
-          <button type="button" onclick="toggleModal('new-asset-modal')" class="w-1/2 bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium py-2 rounded-lg text-sm transition-all">Cancel</button>
-          <button type="submit" class="w-1/2 bg-red-600 hover:bg-red-700 text-white font-medium py-2 rounded-lg text-sm transition-all shadow-md shadow-red-600/20">Encrypt & Store</button>
-        </div>
+        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
+          Lock in Vault
+        </button>
       </form>
     </div>
   </div>
 
-  <!-- Modal: Manage Keyholders -->
-  <div id="beneficiary-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-gray-900 border border-gray-800 rounded-2xl max-w-md w-full p-6 shadow-2xl">
-      <div class="flex justify-between items-center pb-4 border-b border-gray-800 mb-4">
-        <h3 class="text-lg font-bold text-white flex items-center gap-2">
-          <i data-lucide="users" class="w-5 h-5 text-red-500"></i>
-          Designated Keyholders
-        </h3>
-        <button onclick="toggleModal('beneficiary-modal')" class="text-gray-500 hover:text-white">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-
-      <div id="keyholder-list" class="space-y-3 mb-6 max-h-60 overflow-y-auto"></div>
-
-      <button onclick="toggleModal('beneficiary-modal')" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-medium py-2 rounded-lg text-sm transition-all">Close</button>
-    </div>
-  </div>
-
-  <!-- Script Logic -->
   <script>
-    let vaultState = {
-      assets: [],
-      lastPingTime: new Date().getTime()
-    };
-
-    function escapeHtml(str) {
-      if (!str) return '';
-      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    function openModal() {
+      document.getElementById('assetModal').classList.add('active');
     }
 
-    function initVault() {
-      const savedData = localStorage.getItem('v8l_vault_state');
-      if (savedData) {
-        try {
-          vaultState = JSON.parse(savedData);
-        } catch (e) {
-          console.error("Failed to parse vault state", e);
-        }
-      } else {
-        vaultState.assets = [
-          {
-            id: 'v8l-asset-1',
-            title: 'V8L.com Portfolio Transfer Instructions',
-            category: 'Domain Portfolio',
-            payload: 'ENC-v8l-domain-registrar-credentials-and-dns-keys',
-            beneficiary: 'estate@v8l.com',
-            dateAdded: new Date().toISOString()
-          }
-        ];
-        saveVaultState();
-      }
-
-      renderVault();
-      startCountdownTimer();
-      lucide.createIcons();
+    function closeModal() {
+      document.getElementById('assetModal').classList.remove('active');
     }
 
-    function saveVaultState() {
-      localStorage.setItem('v8l_vault_state', JSON.stringify(vaultState));
-    }
-
-    function renderVault() {
-      const grid = document.getElementById('asset-grid');
-      const emptyState = document.getElementById('empty-state');
-      const metricAssets = document.getElementById('metric-asset-count');
-      const metricBeneficiaries = document.getElementById('metric-beneficiary-count');
-
-      grid.innerHTML = '';
-      metricAssets.textContent = vaultState.assets.length;
-      
-      const uniqueBeneficiaries = [...new Set(vaultState.assets.map(a => a.beneficiary))];
-      metricBeneficiaries.textContent = uniqueBeneficiaries.length;
-
-      if (vaultState.assets.length === 0) {
-        grid.classList.add('hidden');
-        emptyState.classList.remove('hidden');
-      } else {
-        grid.classList.remove('hidden');
-        emptyState.classList.add('hidden');
-
-        vaultState.assets.forEach(asset => {
-          const card = document.createElement('div');
-          card.className = 'glow-card rounded-xl p-5 flex flex-col justify-between transition-all';
-          card.innerHTML = `
-            <div>
-              <div class="flex justify-between items-start mb-3">
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-gray-800 text-gray-300 border border-gray-700">${escapeHtml(asset.category)}</span>
-                <button onclick="deleteAsset('${asset.id}')" class="text-gray-600 hover:text-red-400 transition-colors">
-                  <i data-lucide="trash-2" class="w-4 h-4"></i>
-                </button>
-              </div>
-              <h3 class="font-bold text-white text-base mb-2">${escapeHtml(asset.title)}</h3>
-              <div class="bg-gray-950/80 rounded border border-gray-800/80 p-2.5 font-mono text-[11px] text-gray-400 mb-4 break-all">
-                <span class="text-red-400 select-none">KEY: </span>${escapeHtml(asset.payload)}
-              </div>
-            </div>
-            <div class="pt-3 border-t border-gray-800/60 flex justify-between items-center text-xs font-mono text-gray-500">
-              <span class="flex items-center gap-1">
-                <i data-lucide="user-check" class="w-3.5 h-3.5 text-gray-400"></i>
-                ${escapeHtml(asset.beneficiary)}
-              </span>
-              <span>${new Date(asset.dateAdded).toLocaleDateString()}</span>
-            </div>
-          `;
-          grid.appendChild(card);
-        });
-      }
-
-      renderKeyholders(uniqueBeneficiaries);
-      lucide.createIcons();
-    }
-
-    function renderKeyholders(beneficiaries) {
-      const list = document.getElementById('keyholder-list');
-      list.innerHTML = '';
-      if (beneficiaries.length === 0) {
-        list.innerHTML = '<p class="text-sm text-gray-500">No active keyholders assigned.</p>';
-        return;
-      }
-      beneficiaries.forEach(b => {
-        const item = document.createElement('div');
-        item.className = 'flex items-center justify-between p-3 bg-gray-950 border border-gray-800 rounded-lg text-sm';
-        item.innerHTML = `
-          <div class="flex items-center gap-2">
-            <i data-lucide="shield" class="w-4 h-4 text-emerald-400"></i>
-            <span class="text-gray-200 font-mono text-xs">${escapeHtml(b)}</span>
-          </div>
-          <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2 py-0.5 rounded">Verified</span>
-        `;
-        list.appendChild(item);
-      });
-    }
-
-    function handleAssetSubmit(event) {
-      event.preventDefault();
-      const title = document.getElementById('asset-title').value;
-      const category = document.getElementById('asset-category').value;
-      const payload = document.getElementById('asset-payload').value;
-      const beneficiary = document.getElementById('asset-beneficiary').value;
-
-      const encryptedPayload = "ENC-" + btoa(payload).substring(0, 32) + "...";
-
-      const newAsset = {
-        id: 'v8l-asset-' + Date.now(),
-        title,
-        category,
-        payload: encryptedPayload,
-        beneficiary,
-        dateAdded: new Date().toISOString()
-      };
-
-      vaultState.assets.unshift(newAsset);
-      saveVaultState();
-      renderVault();
-
-      document.getElementById('asset-form').reset();
-      toggleModal('new-asset-modal');
-    }
-
-    function deleteAsset(id) {
-      if (confirm("Are you sure you want to remove this encrypted asset from your vault?")) {
-        vaultState.assets = vaultState.assets.filter(a => a.id !== id);
-        saveVaultState();
-        renderVault();
-      }
-    }
-
-    function toggleModal(modalId) {
-      const modal = document.getElementById(modalId);
-      if (modal) {
-        modal.classList.toggle('hidden');
-      }
-    }
-
-    function simulatePing() {
-      vaultState.lastPingTime = new Date().getTime();
-      saveVaultState();
-      const statusText = document.getElementById('ping-status');
-      statusText.textContent = "Status: Ping Confirmed Just Now";
-      statusText.className = "text-xs font-mono text-emerald-400 font-semibold animate-pulse";
-      setTimeout(() => {
-        statusText.className = "text-xs font-mono text-emerald-400 font-semibold";
-      }, 3000);
-    }
-
-    function startCountdownTimer() {
-      setInterval(() => {
-        const now = new Date().getTime();
-        const expirationTime = vaultState.lastPingTime + (30 * 24 * 60 * 60 * 1000);
-        const distance = expirationTime - now;
-
-        if (distance < 0) {
-          document.getElementById('timer-days').textContent = '00';
-          document.getElementById('timer-hours').textContent = '00';
-          document.getElementById('timer-mins').textContent = '00';
-          document.getElementById('timer-secs').textContent = '00';
-          document.getElementById('ping-status').textContent = 'CRITICAL: Switch Triggered';
-          document.getElementById('ping-status').className = 'text-xs font-mono text-red-500 font-semibold';
-          return;
-        }
-
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 *The button didn't open the window because the script at the bottom of the previous file got cut off midway through and missing function declarations broke the click event listener.
-
-Here is the complete, fixed, single-file code for your `index.html`. It includes full working modal controls, asset creation, client-side AES encryption, local storage persistence, and check-in timer functionality.
-
-```html
-<!DOCTYPE html>
-<html lang="en" class="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V8L | V8 Lock - High-Performance Digital Asset Vault</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            red: '#EF4444',
-                            darkRed: '#991B1B',
-                            dark: '#0F172A',
-                            panel: '#1E293B',
-                            border: '#334155'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- FontAwesome CDN -->
-    <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
-    <!-- CryptoJS CDN for Client-Side AES-256 Simulation -->
-    <script src="[https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js](https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js)"></script>
-</head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-red-500 selection:text-white">
-
-    <!-- Header Navigation -->
-    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('dashboard')">
-                <div class="bg-gradient-to-br from-red-600 to-red-800 text-white p-2 rounded-lg font-black text-xl tracking-wider shadow-lg shadow-red-900/40 border border-red-500/30">
-                    V8L
-                </div>
-                <div>
-                    <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">V8 LOCK</span>
-                    <span class="hidden sm:inline-block text-xs bg-red-950 text-red-400 border border-red-800/50 px-2 py-0.5 rounded-full ml-2 font-mono">ZERO-KNOWLEDGE</span>
-                </div>
-            </div>
-
-            <!-- Navigation Links -->
-            <nav class="hidden md:flex items-center space-x-1">
-                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition text-white bg-slate-800">
-                    <i class="fa-solid fa-gauge-high mr-2 text-red-500"></i>Dashboard
-                </button>
-                <button onclick="switchTab('vault')" id="nav-vault" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition text-slate-400 hover:text-white hover:bg-slate-800">
-                    <i class="fa-solid fa-vault mr-2 text-red-500"></i>Asset Vault
-                </button>
-                <button onclick="switchTab('switch')" id="nav-switch" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition text-slate-400 hover:text-white hover:bg-slate-800">
-                    <i class="fa-solid fa-clock mr-2 text-red-500"></i>Dead-Man Switch
-                </button>
-                <button onclick="switchTab('beneficiaries')" id="nav-beneficiaries" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition text-slate-400 hover:text-white hover:bg-slate-800">
-                    <i class="fa-solid fa-users mr-2 text-red-500"></i>Beneficiaries
-                </button>
-                <button onclick="switchTab('audit')" id="nav-audit" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition text-slate-400 hover:text-white hover:bg-slate-800">
-                    <i class="fa-solid fa-shield-halved mr-2 text-red-500"></i>Security Audit
-                </button>
-            </nav>
-
-            <div class="flex items-center space-x-3">
-                <button onclick="openModal('add-asset-modal')" class="bg-red-600 hover:bg-red-500 text-white font-semibold px-4 py-2 rounded-lg text-sm shadow-md shadow-red-900/30 transition flex items-center">
-                    <i class="fa-solid fa-plus mr-2"></i>Add Vault Asset
-                </button>
-                <button onclick="checkIn()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold px-4 py-2 rounded-lg text-sm transition flex items-center">
-                    <i class="fa-solid fa-heart-pulse mr-2 text-red-500"></i>Check In
-                </button>
-            </div>
-        </div>
-
-        <!-- Mobile Nav Bar -->
-        <div class="md:hidden flex justify-around border-t border-slate-800 bg-slate-900 py-2 text-xs">
-            <button onclick="switchTab('dashboard')" class="text-center py-1 text-red-400"><i class="fa-solid fa-gauge-high block text-base mb-1"></i>Dash</button>
-            <button onclick="switchTab('vault')" class="text-center py-1 text-slate-400"><i class="fa-solid fa-vault block text-base mb-1"></i>Vault</button>
-            <button onclick="switchTab('switch')" class="text-center py-1 text-slate-400"><i class="fa-solid fa-clock block text-base mb-1"></i>Switch</button>
-            <button onclick="switchTab('beneficiaries')" class="text-center py-1 text-slate-400"><i class="fa-solid fa-users block text-base mb-1"></i>Heirs</button>
-            <button onclick="switchTab('audit')" class="text-center py-1 text-slate-400"><i class="fa-solid fa-shield-halved block text-base mb-1"></i>Audit</button>
-        </div>
-    </header>
-
-    <!-- Main Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
-
-        <!-- DASHBOARD TAB -->
-        <section id="tab-dashboard" class="tab-content space-y-6">
-            <!-- Hero Banner -->
-            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-850 to-red-950 p-6 sm:p-8 border border-slate-800 shadow-2xl">
-                <div class="relative z-10 max-w-3xl space-y-3">
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-500/10 text-red-400 border border-red-500/20">
-                        <i class="fa-solid fa-lock mr-2"></i> Client-Side AES-256 Vault Active
-                    </span>
-                    <h1 class="text-3xl sm:text-4xl font-black text-white tracking-tight">V8 LOCK ASSET INFRASTRUCTURE</h1>
-                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
-                        High-performance zero-knowledge asset protection. Store digital credentials, corporate domains, and legal instructions. Automatically release encrypted keys to designated heirs if check-in protocols expire.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Stats Overview -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex items-center space-x-4">
-                    <div class="p-3 bg-red-500/10 text-red-500 rounded-lg text-2xl"><i class="fa-solid fa-vault"></i></div>
-                    <div>
-                        <div class="text-2xl font-bold text-white" id="stat-vault-count">0</div>
-                        <div class="text-xs text-slate-400">Encrypted Vault Assets</div>
-                    </div>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex items-center space-x-4">
-                    <div class="p-3 bg-emerald-500/10 text-emerald-500 rounded-lg text-2xl"><i class="fa-solid fa-clock"></i></div>
-                    <div>
-                        <div class="text-2xl font-bold text-white" id="stat-timer">30d 00h</div>
-                        <div class="text-xs text-slate-400">Switch Countdown</div>
-                    </div>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex items-center space-x-4">
-                    <div class="p-3 bg-blue-500/10 text-blue-500 rounded-lg text-2xl"><i class="fa-solid fa-users"></i></div>
-                    <div>
-                        <div class="text-2xl font-bold text-white" id="stat-beneficiary-count">0</div>
-                        <div class="text-xs text-slate-400">Assigned Beneficiaries</div>
-                    </div>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex items-center space-x-4">
-                    <div class="p-3 bg-amber-500/10 text-amber-500 rounded-lg text-2xl"><i class="fa-solid fa-shield-halved"></i></div>
-                    <div>
-                        <div class="text-2xl font-bold text-emerald-400">100%</div>
-                        <div class="text-xs text-slate-400">Encryption Health</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Action Panel -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Recent Assets -->
-                <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
-                    <div class="flex items-center justify-between">
-                        <h2 class="text-lg font-bold text-white flex items-center">
-                            <i class="fa-solid fa-list text-red-500 mr-2"></i> Recent Protected Assets
-                        </h2>
-                        <button onclick="switchTab('vault')" class="text-xs text-red-400 hover:text-red-300 font-semibold">View All &rarr;</button>
-                    </div>
-                    <div id="dashboard-asset-list" class="space-y-3">
-                        <!-- JS Dynamic Insert -->
-                    </div>
-                </div>
-
-                <!-- Proof of Life Status Card -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <h2 class="text-lg font-bold text-white">Proof of Life</h2>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-950 text-emerald-400 border border-emerald-800">
-                                ACTIVE
-                            </span>
-                        </div>
-                        <p class="text-xs text-slate-400 mb-4">
-                            Press the Check-In button periodically to confirm your status and prevent automated succession key triggers.
-                        </p>
-                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-center space-y-1">
-                            <span class="text-xs text-slate-500 uppercase tracking-widest font-semibold block">Last Verified Check-In</span>
-                            <span id="last-checkin-date" class="text-sm font-mono text-slate-200">Never</span>
-                        </div>
-                    </div>
-
-                    <button onclick="checkIn()" class="w-full py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl shadow-lg shadow-red-900/30 transition flex items-center justify-center space-x-2">
-                        <i class="fa-solid fa-fingerprint text-lg"></i>
-                        <span>CONFIRM PRESENCE NOW</span>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- VAULT TAB -->
-        <section id="tab-vault" class="tab-content hidden space-y-6">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                    <h1 class="text-2xl font-bold text-white">Digital Asset Vault</h1>
-                    <p class="text-slate-400 text-sm">Add domain names, master keys, cloud archives, and legal instructions.</p>
-                </div>
-                <button onclick="openModal('add-asset-modal')" class="bg-red-600 hover:bg-red-500 text-white font-semibold px-4 py-2 rounded-lg text-sm shadow-lg shadow-red-900/30 transition flex items-center">
-                    <i class="fa-solid fa-plus mr-2"></i> Add Vault Item
-                </button>
-            </div>
-
-            <!-- Asset Grid -->
-            <div id="vault-items-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- JS Populated -->
-            </div>
-        </section>
-
-        <!-- DEAD-MAN SWITCH TAB -->
-        <section id="tab-switch" class="tab-content hidden space-y-6">
-            <div class="max-w-3xl mx-auto space-y-6">
-                <div>
-                    <h1 class="text-2xl font-bold text-white">Dead-Man Switch Configuration</h1>
-                    <p class="text-slate-400 text-sm">Automated release settings and verification grace periods.</p>
-                </div>
-
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6">
-                    <div class="space-y-4">
-                        <label class="block text-sm font-semibold text-slate-200">Check-In Interval Frequency</label>
-                        <select id="switch-interval" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 focus:outline-none focus:border-red-500">
-                            <option value="30">Every 30 Days (Recommended)</option>
-                            <option value="60">Every 60 Days</option>
-                            <option value="90">Every 90 Days</option>
-                            <option value="180">Every 180 Days</option>
-                        </select>
-                    </div>
-
-                    <div class="space-y-4">
-                        <label class="block text-sm font-semibold text-slate-200">Grace Period Before Final Key Release</label>
-                        <select id="switch-grace" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 focus:outline-none focus:border-red-500">
-                            <option value="7">7 Days Grace Period</option>
-                            <option value="14">14 Days Grace Period</option>
-                            <option value="30">30 Days Grace Period</option>
-                        </select>
-                    </div>
-
-                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2">
-                        <div class="flex items-center text-amber-400 text-sm font-semibold">
-                            <i class="fa-solid fa-triangle-exclamation mr-2"></i> Safety Protocol Notice
-                        </div>
-                        <p class="text-xs text-slate-400">
-                            If an interval expires without check-in, V8L initiates SMS and email ping warnings across the grace period before notifying assigned beneficiaries.
-                        </p>
-                    </div>
-
-                    <button onclick="saveSwitchSettings()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl shadow-lg transition">
-                        Save Protocol Settings
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- BENEFICIARIES TAB -->
-        <section id="tab-beneficiaries" class="tab-content hidden space-y-6">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h1 class="text-2xl font-bold text-white">Assigned Beneficiaries & Heirs</h1>
-                    <p class="text-slate-400 text-sm">Designate who receives specific vault keys upon verified succession.</p>
-                </div>
-                <button onclick="openModal('add-beneficiary-modal')" class="bg-red-600 hover:bg-red-500 text-white font-semibold px-4 py-2 rounded-lg text-sm shadow-lg shadow-red-900/30 transition flex items-center">
-                    <i class="fa-solid fa-user-plus mr-2"></i> Add Heir
-                </button>
-            </div>
-
-            <div id="beneficiaries-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- JS Dynamic Insert -->
-            </div>
-        </section>
-
-        <!-- AUDIT & LOGS TAB -->
-        <section id="tab-audit" class="tab-content hidden space-y-6">
-            <div>
-                <h1 class="text-2xl font-bold text-white">Security Audit & Encryption Status</h1>
-                <p class="text-slate-400 text-sm">Immutable client-side cryptographic check logs and export controls.</p>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
-                    <h2 class="text-lg font-bold text-white">Cryptographic Summary</h2>
-                    <div class="space-y-3 text-xs">
-                        <div class="flex justify-between py-2 border-b border-slate-800 text-slate-300">
-                            <span>Algorithm:</span>
-                            <span class="font-mono text-red-400">AES-256-CBC</span>
-                        </div>
-                        <div class="flex justify-between py-2 border-b border-slate-800 text-slate-300">
-                            <span>Key Derivation:</span>
-                            <span class="font-mono text-red-400">PBKDF2 / SHA256</span>
-                        </div>
-                        <div class="flex justify-between py-2 border-b border-slate-800 text-slate-300">
-                            <span>Architecture:</span>
-                            <span class="font-mono text-emerald-400">Zero-Knowledge Client Side</span>
-                        </div>
-                    </div>
-                    <button onclick="exportData()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2 rounded-lg text-xs border border-slate-700 transition flex items-center justify-center">
-                        <i class="fa-solid fa-download mr-2"></i> Export Encrypted Vault Backup
-                    </button>
-                </div>
-
-                <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
-                    <h2 class="text-lg font-bold text-white">Security Audit Event Log</h2>
-                    <div id="audit-log-container" class="space-y-2 font-mono text-xs max-h-80 overflow-y-auto pr-2">
-                        <!-- JS Insert -->
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="border-t border-slate-800 bg-slate-900/50 py-6">
-        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 space-y-1">
-            <p>V8L.com &copy; 2026 V8 LOCK DIGITAL ESTATE INFRASTRUCTURE. ALL RIGHTS RESERVED.</p>
-            <p class="font-mono">AES-256 ZERO-KNOWLEDGE ARCHITECTURE | CLIENT-SIDE ENCRYPTION SIMULATION</p>
-        </div>
-    </footer>
-
-    <!-- ADD ASSET MODAL -->
-    <div id="add-asset-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-lock text-red-500 mr-2"></i>Add Vault Asset</h3>
-                <button onclick="closeModal('add-asset-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <form id="asset-form" onsubmit="saveAsset(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Asset Category</label>
-                    <select id="asset-type" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-red-500">
-                        <option value="domain">Domain Name / Web Asset</option>
-                        <option value="key">API / Master Encryption Key</option>
-                        <option value="legal">Legal Instruction / Document</option>
-                        <option value="finance">Financial Account Access</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Asset Title / Domain Identifier</label>
-                    <input type="text" id="asset-title" required placeholder="e.g. V8L.com Domain Registrar Access" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-red-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Secret / Credential Payload (Encrypted Locally)</label>
-                    <textarea id="asset-payload" required rows="3" placeholder="Enter instructions, keys, or passwords to encrypt..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200 font-mono focus:outline-none focus:border-red-500"></textarea>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Encryption Passphrase</label>
-                    <input type="password" id="asset-passphrase" required placeholder="Master key used to lock payload" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-red-500">
-                </div>
-                <div class="flex justify-end space-x-2 pt-2">
-                    <button type="button" onclick="closeModal('add-asset-modal')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-xs font-semibold">Encrypt & Store</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- ADD BENEFICIARY MODAL -->
-    <div id="add-beneficiary-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-user-shield text-red-500 mr-2"></i>Add Heir / Beneficiary</h3>
-                <button onclick="closeModal('add-beneficiary-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <form id="beneficiary-form" onsubmit="saveBeneficiary(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Full Legal Name</label>
-                    <input type="text" id="ben-name" required placeholder="First & Last Name" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-red-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Email Address</label>
-                    <input type="email" id="ben-email" required placeholder="beneficiary@domain.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-red-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Relationship Role</label>
-                    <select id="ben-role" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-red-500">
-                        <option value="Primary Heir">Primary Heir</option>
-                        <option value="Business Co-Founder">Business Co-Founder</option>
-                        <option value="Legal Executor">Legal Executor</option>
-                        <option value="Family Member">Family Member</option>
-                    </select>
-                </div>
-                <div class="flex justify-end space-x-2 pt-2">
-                    <button type="button" onclick="closeModal('add-beneficiary-modal')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-xs font-semibold">Assign Beneficiary</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Application JavaScript Logic -->
-    <script>
-        // Modal Helper Functions
-        function openModal(id) {
-            const modal = document.getElementById(id);
-            if(modal) modal.classList.remove('hidden');
-        }
-
-        function closeModal(id) {
-            const modal = document.getElementById(id);
-            if(modal) modal.classList.add('hidden');
-        }
-
-        // State Management with LocalStorage Persistence
-        let state = {
-            assets: JSON.parse(localStorage.getItem('v8l_assets')) || [
-                {
-                    id: 1,
-                    type: 'domain',
-                    title: 'V8L.com Registrar Control',
-                    payloadEncrypted: 'U2FsdGVkX19v8L1234567890abcdef...',
-                    createdAt: new Date().toLocaleDateString()
-                }
-            ],
-            beneficiaries: JSON.parse(localStorage.getItem('v8l_beneficiaries')) || [
-                { id: 1, name: 'Richard Kayian', email: 'r.kayian@v8l.com', role: 'Business Co-Founder' }
-            ],
-            lastCheckIn: localStorage.getItem('v8l_last_checkin') || new Date().toISOString(),
-            switchDays: parseInt(localStorage.getItem('v8l_switch_days')) || 30,
-            auditLogs: JSON.parse(localStorage.getItem('v8l_audit')) || [
-                { time: new Date().toLocaleTimeString(), event: 'System initialized with AES-256 layer' }
-            ]
-        };
-
-        function init() {
-            renderDashboard();
-            renderVault();
-            renderBeneficiaries();
-            renderAuditLogs();
-            updateTimer();
-        }
-
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.nav-btn').forEach(el => {
-                el.classList.remove('bg-slate-800', 'text-white');
-                el.classList.add('text-slate-400');
-            });
-
-            const targetTab = document.getElementById(`tab-${tabId}`);
-            if(targetTab) targetTab.classList.remove('hidden');
-            
-            const navBtn = document.getElementById(`nav-${tabId}`);
-            if(navBtn) {
-                navBtn.classList.add('bg-slate-800', 'text-white');
-                navBtn.classList.remove('text-slate-400');
-            }
-        }
-
-        function logAudit(eventText) {
-            const entry = { time: new Date().toLocaleTimeString(), event: eventText };
-            state.auditLogs.unshift(entry);
-            localStorage.setItem('v8l_audit', JSON.stringify(state.auditLogs));
-            renderAuditLogs();
-        }
-
-        function renderDashboard() {
-            document.getElementById('stat-vault-count').innerText = state.assets.length;
-            document.getElementById('stat-beneficiary-count').innerText = state.beneficiaries.length;
-            document.getElementById('last-checkin-date').innerText = new Date(state.lastCheckIn).toLocaleString();
-
-            const list = document.getElementById('dashboard-asset-list');
-            if(state.assets.length === 0) {
-                list.innerHTML = `<p class="text-xs text-slate-500 italic">No encrypted assets stored yet.</p>`;
-                return;
-            }
-            list.innerHTML = state.assets.slice(0, 3).map(asset => `
-                <div class="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-slate-800">
-                    <div class="flex items-center space-x-3">
-                        <i class="fa-solid ${getAssetIcon(asset.type)} text-red-500 text-lg"></i>
-                        <div>
-                            <div class="text-sm font-semibold text-slate-200">${asset.title}</div>
-                            <div class="text-xs text-slate-500 font-mono">Encrypted: ${asset.payloadEncrypted.substring(0, 20)}...</div>
-                        </div>
-                    </div>
-                    <span class="text-xs text-slate-500">${asset.createdAt}</span>
-                </div>
-            `).join('');
-        }
-
-        function renderVault() {
-            const grid = document.getElementById('vault-items-grid');
-            if(state.assets.length === 0) {
-                grid.innerHTML = `<p class="text-sm text-slate-500 col-span-full text-center py-8">Vault is currently empty. Click "Add Vault Item" to secure assets.</p>`;
-                return;
-            }
-            grid.innerHTML = state.assets.map(asset => `
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 flex flex-col justify-between">
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-start">
-                            <span class="p-2 bg-red-500/10 text-red-500 rounded-lg"><i class="fa-solid ${getAssetIcon(asset.type)}"></i></span>
-                            <button onclick="deleteAsset(${asset.id})" class="text-slate-600 hover:text-red-400 text-xs"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                        <h3 class="font-bold text-white text-base">${asset.title}</h3>
-                        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-xs text-slate-400 break-all">
-                            ${asset.payloadEncrypted}
-                        </div>
-                    </div>
-                    <button onclick="decryptPrompt('${asset.payloadEncrypted}')" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 rounded-lg transition border border-slate-700">
-                        <i class="fa-solid fa-key mr-1 text-red-400"></i> Decrypt Payload
-                    </button>
-                </div>
-            `).join('');
-        }
-
-        function renderBeneficiaries() {
-            const container = document.getElementById('beneficiaries-list');
-            if(state.beneficiaries.length === 0) {
-                container.innerHTML = `<p class="text-sm text-slate-500 col-span-full text-center py-8">No beneficiaries assigned.</p>`;
-                return;
-            }
-            container.innerHTML = state.beneficiaries.map(ben => `
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex items-center justify-between">
-                    <div class="flex items-center space-x-4">
-                        <div class="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-red-500">
-                            ${ben.name.charAt(0)}
-                        </div>
-                        <div>
-                            <div class="text-sm font-bold text-white">${ben.name}</div>
-                            <div class="text-xs text-slate-400">${ben.email}</div>
-                            <span class="inline-block mt-1 px-2 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300 font-mono">${ben.role}</span>
-                        </div>
-                    </div>
-                    <button onclick="deleteBeneficiary(${ben.id})" class="text-slate-600 hover:text-red-400 text-xs"><i class="fa-solid fa-trash"></i></button>
-                </div>
-            `).join('');
-        }
-
-        function renderAuditLogs() {
-            const container = document.getElementById('audit-log-container');
-            container.innerHTML = state.auditLogs.map(log => `
-                <div class="p-2 bg-slate-950 border border-slate-850 rounded flex justify-between">
-                    <span class="text-slate-400">[${log.time}]</span>
-                    <span class="text-slate-200">${log.event}</span>
-                </div>
-            `).join('');
-        }
-
-        function getAssetIcon(type) {
-            switch(type) {
-                case 'domain': return 'fa-globe';
-                case 'key': return 'fa-key';
-                case 'legal': return 'fa-file-contract';
-                default: return 'fa-shield';
-            }
-        }
-
-        function checkIn() {
-            state.lastCheckIn = new Date().toISOString();
-            localStorage.setItem('v8l_last_checkin', state.lastCheckIn);
-            logAudit('User presence verified via manual check-in');
-            renderDashboard();
-            alert('Presence Verified. Dead-Man switch timer reset.');
-        }
-
-        function saveAsset(e) {
-            e.preventDefault();
-            const type = document.getElementById('asset-type').value;
-            const title = document.getElementById('asset-title').value;
-            const payload = document.getElementById('asset-payload').value;
-            const passphrase = document.getElementById('asset-passphrase').value;
-
-            // Client-side AES encryption
-            const encrypted = CryptoJS.AES.encrypt(payload, passphrase).toString();
-
-            const newAsset = {
-                id: Date.now(),
-                type,
-                title,
-                payloadEncrypted: encrypted,
-                createdAt: new Date().toLocaleDateString()
-            };
-
-            state.assets.push(newAsset);
-            localStorage.setItem('v8l_assets', JSON.stringify(state.assets));
-            logAudit(`New encrypted asset created: ${title}`);
-            
-            closeModal('add-asset-modal');
-            document.getElementById('asset-form').reset();
-            renderDashboard();
-            renderVault();
-        }
-
-        function saveBeneficiary(e) {
-            e.preventDefault();
-            const name = document.getElementById('ben-name').value;
-            const email = document.getElementById('ben-email').value;
-            const role = document.getElementById('ben-role').value;
-
-            const newBen = { id: Date.now(), name, email, role };
-            state.beneficiaries.push(newBen);
-            localStorage.setItem('v8l_beneficiaries', JSON.stringify(state.beneficiaries));
-            logAudit(`Assigned new beneficiary: ${name} (${role})`);
-
-            closeModal('add-beneficiary-modal');
-            document.getElementById('beneficiary-form').reset();
-            renderDashboard();
-            renderBeneficiaries();
-        }
-
-        function decryptPrompt(encryptedPayload) {
-            const pass = prompt('Enter Master Passphrase to Decrypt Payload:');
-            if(!pass) return;
-            try {
-                const bytes = CryptoJS.AES.decrypt(encryptedPayload, pass);
-                const originalText = bytes.toString(CryptoJS.enc.Utf8);
-                if(originalText) {
-                    alert(`Decrypted Payload:\n\n${originalText}`);
-                    logAudit('Successful local payload decryption');
-                } else {
-                    alert('Decryption failed: Incorrect Passphrase');
-                    logAudit('Failed payload decryption attempt');
-                }
-            } catch(err) {
-                alert('Error decrypting payload.');
-            }
-        }
-
-        function deleteAsset(id) {
-            state.assets = state.assets.filter(a => a.id !== id);
-            localStorage.setItem('v8l_assets', JSON.stringify(state.assets));
-            logAudit(`Asset removed from vault`);
-            renderDashboard();
-            renderVault();
-        }
-
-        function deleteBeneficiary(id) {
-            state.beneficiaries = state.beneficiaries.filter(b => b.id !== id);
-            localStorage.setItem('v8l_beneficiaries', JSON.stringify(state.beneficiaries));
-            logAudit(`Beneficiary removed`);
-            renderDashboard();
-            renderBeneficiaries();
-        }
-
-        function saveSwitchSettings() {
-            const val = document.getElementById('switch-interval').value;
-            state.switchDays = parseInt(val);
-            localStorage.setItem('v8l_switch_days', state.switchDays);
-            logAudit(`Dead-man switch timer updated to ${val} days`);
-            alert('Switch interval saved successfully.');
-        }
-
-        function updateTimer() {
-            document.getElementById('stat-timer').innerText = `${state.switchDays}d 00h`;
-        }
-
-        function exportData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
-            const dlAnchorElem = document.createElement('a');
-            dlAnchorElem.setAttribute("href", dataStr);
-            dlAnchorElem.setAttribute("download", `v8l_vault_backup_${Date.now()}.json`);
-            dlAnchorElem.click();
-            logAudit('Exported encrypted vault backup');
-        }
-
-        // Initialize application on page load
-        window.onload = init;
-    </script>
+    // Close modal on outside click
+    document.getElementById('assetModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+  </script>
 </body>
 </html>
