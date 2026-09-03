@@ -1,19 +1,20 @@
-HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Digital Safe Deposit Box</title>
+  <title>Digital Safe Deposit Box | Zero-Knowledge Asset Vault</title>
   <style>
     :root {
-      --bg: #0b0f19;
-      --card-bg: rgba(17, 24, 39, 0.7);
-      --border: rgba(255, 255, 255, 0.1);
+      --bg: #070a12;
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(0, 242, 254, 0.25);
       --accent-cyan: #00f2fe;
       --accent-emerald: #10b981;
-      --text: #f3f4f6;
-      --muted: #9ca3af;
+      --accent-purple: #8b5cf6;
+      --text: #f8fafc;
+      --muted: #94a3b8;
     }
 
     * {
@@ -30,167 +31,203 @@ HTML
       display: flex;
       flex-direction: column;
       background-image: 
-        radial-gradient(circle at 10% 10%, rgba(0, 242, 254, 0.05) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
+        radial-gradient(circle at 15% 15%, rgba(0, 242, 254, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(139, 92, 246, 0.06) 0%, transparent 45%);
     }
 
-    /* Navbar */
+    /* Top Navigation */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1.25rem 2rem;
+      padding: 1.25rem 2.5rem;
       border-bottom: 1px solid var(--border);
       backdrop-filter: blur(12px);
-      background: rgba(11, 15, 25, 0.8);
+      background: rgba(7, 10, 18, 0.85);
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 20;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.85rem;
       font-weight: 700;
       font-size: 1.25rem;
       letter-spacing: -0.02em;
     }
 
     .vault-icon {
-      width: 28px;
-      height: 28px;
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-emerald));
-      border-radius: 6px;
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 12px rgba(0, 242, 254, 0.3);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.35);
     }
 
     .btn-primary {
       background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-      color: #0b0f19;
-      font-weight: 600;
-      padding: 0.6rem 1.25rem;
+      color: #070a12;
+      font-weight: 700;
+      padding: 0.65rem 1.35rem;
       border-radius: 8px;
       border: none;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      box-shadow: 0 0 15px rgba(0, 242, 254, 0.25);
+      box-shadow: 0 0 18px rgba(0, 242, 254, 0.25);
     }
 
     .btn-primary:hover {
-      opacity: 0.9;
+      opacity: 0.95;
       transform: translateY(-1px);
-      box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.45);
     }
 
     /* Main Container */
     main {
-      max-width: 1100px;
+      max-width: 1140px;
       margin: 0 auto;
-      padding: 3rem 1.5rem;
+      padding: 3.5rem 1.5rem;
       width: 100%;
     }
 
-    /* Hero Banner */
+    /* Hero Section */
     .hero {
       text-align: center;
-      margin-bottom: 3rem;
+      margin-bottom: 3.5rem;
     }
 
     .status-badge {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      color: var(--accent-emerald);
-      padding: 0.35rem 0.85rem;
+      gap: 0.6rem;
+      background: rgba(0, 242, 254, 0.08);
+      border: 1px solid rgba(0, 242, 254, 0.25);
+      color: var(--accent-cyan);
+      padding: 0.4rem 0.95rem;
       border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
+      font-size: 0.78rem;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 1.25rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 1.5rem;
     }
 
     .status-dot {
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
       background-color: var(--accent-emerald);
       border-radius: 50%;
-      box-shadow: 0 0 8px var(--accent-emerald);
+      box-shadow: 0 0 10px var(--accent-emerald);
     }
 
     .hero h1 {
-      font-size: 2.5rem;
+      font-size: 2.75rem;
       font-weight: 800;
-      margin-bottom: 0.75rem;
-      background: linear-gradient(180deg, #ffffff 0%, #9ca3af 100%);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      background: linear-gradient(180deg, #ffffff 20%, #94a3b8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .hero p {
       color: var(--muted);
-      font-size: 1.1rem;
-      max-width: 650px;
+      font-size: 1.15rem;
+      max-width: 720px;
       margin: 0 auto;
-      line-height: 1.6;
+      line-height: 1.65;
     }
 
-    /* Asset Category Pills / Examples */
-    .asset-types {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-top: 2rem;
+    /* Target Asset Categories Grid */
+    .categories-title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
     }
 
-    .type-card {
+    .asset-categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .category-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      padding: 1rem 1.25rem;
+      padding: 1.25rem 1.5rem;
       border-radius: 12px;
+      text-align: left;
+      backdrop-filter: blur(10px);
+      transition: all 0.2s ease;
+    }
+
+    .category-card:hover {
+      border-color: var(--border-glow);
+      transform: translateY(-2px);
+    }
+
+    .category-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      font-size: 0.9rem;
-      backdrop-filter: blur(8px);
+      justify-content: center;
+      margin-bottom: 0.85rem;
+      color: var(--accent-cyan);
     }
 
-    .type-card svg {
-      stroke: var(--accent-cyan);
+    .category-card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      color: #fff;
     }
 
-    /* Asset Grid Header */
+    .category-card p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    /* Vault Contents Header */
     .grid-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-top: 4rem;
       margin-bottom: 1.5rem;
       padding-bottom: 1rem;
       border-bottom: 1px solid var(--border);
     }
 
     .grid-title {
-      font-size: 1.2rem;
-      font-weight: 600;
+      font-size: 1.3rem;
+      font-weight: 700;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.6rem;
     }
 
-    /* Assets Grid */
+    /* Active Vault Assets */
     .assets-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 1.5rem;
     }
 
@@ -200,11 +237,10 @@ HTML
       border-radius: 14px;
       padding: 1.5rem;
       transition: all 0.2s ease;
-      position: relative;
     }
 
     .asset-card:hover {
-      border-color: rgba(0, 242, 254, 0.4);
+      border-color: var(--border-glow);
       transform: translateY(-2px);
     }
 
@@ -216,13 +252,14 @@ HTML
     }
 
     .asset-tag {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-family: monospace;
-      padding: 0.2rem 0.5rem;
+      padding: 0.25rem 0.55rem;
       border-radius: 4px;
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--accent-cyan);
-      border: 1px solid rgba(0, 242, 254, 0.2);
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      letter-spacing: 0.05em;
     }
 
     .asset-name {
@@ -243,16 +280,17 @@ HTML
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
+      font-family: monospace;
       color: var(--muted);
     }
 
-    /* Modal Styling */
+    /* Modal Overlay & Dialog */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(8px);
+      background: rgba(3, 7, 18, 0.82);
+      backdrop-filter: blur(10px);
       display: none;
       align-items: center;
       justify-content: center;
@@ -264,13 +302,13 @@ HTML
     }
 
     .modal {
-      background: #111827;
+      background: #0f172a;
       border: 1px solid var(--border);
       border-radius: 16px;
       width: 100%;
-      max-width: 480px;
-      padding: 2rem;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      max-width: 520px;
+      padding: 2.25rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
     }
 
     .modal-header {
@@ -280,16 +318,26 @@ HTML
       margin-bottom: 1.5rem;
     }
 
+    .modal-header h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
     .close-btn {
       background: none;
       border: none;
       color: var(--muted);
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       cursor: pointer;
+      line-height: 1;
+    }
+
+    .close-btn:hover {
+      color: #fff;
     }
 
     .form-group {
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.35rem;
     }
 
     .form-group label {
@@ -297,19 +345,22 @@ HTML
       font-size: 0.85rem;
       color: var(--muted);
       margin-bottom: 0.5rem;
+      font-weight: 500;
     }
 
-    .form-group input, .form-group select {
+    .form-group input, .form-group select, .form-group textarea {
       width: 100%;
-      padding: 0.75rem;
-      background: rgba(0, 0, 0, 0.3);
+      padding: 0.8rem 1rem;
+      background: rgba(3, 7, 18, 0.5);
       border: 1px solid var(--border);
       border-radius: 8px;
       color: var(--text);
+      font-size: 0.95rem;
       outline: none;
+      transition: border-color 0.2s ease;
     }
 
-    .form-group input:focus, .form-group select:focus {
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
       border-color: var(--accent-cyan);
     }
   </style>
@@ -320,42 +371,61 @@ HTML
   <header>
     <div class="brand">
       <div class="vault-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0b0f19" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#070a12" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
       </div>
       Digital Safe Deposit Box
     </div>
-    <!-- Fixed Trigger: Both buttons now call openModal() directly -->
+    <!-- Both buttons reference openModal() -->
     <button class="btn-primary" onclick="openModal()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-      Add Asset
+      Deposit Asset
     </button>
   </header>
 
   <main>
-    <!-- Hero / Explanation Section -->
+    <!-- Hero / Value Proposition -->
     <section class="hero">
       <div class="status-badge">
-        <span class="status-dot"></span> AES-256 Encrypted Protocol
+        <span class="status-dot"></span> Zero-Knowledge Cryptographic Vault
       </div>
-      <h1>Ultra-Secure Digital Asset Vault</h1>
+      <h1>Conceal & Protect Your Most Valuable Digital Property</h1>
       <p>
-        Protect, conceal, and store high-value digital property with zero-knowledge, cryptographic privacy. 
-        Your digital assets remain completely secure and accessible only by your private key.
+        A secure, private digital vault for non-custodial storage. Hide proprietary data, core IP, financial records, and estate instructions behind zero-knowledge encryption—accessible only by your private key.
       </p>
 
-      <!-- Supported Examples -->
-      <div class="asset-types">
-        <div class="type-card">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line></svg>
-          Domain Names
+      <!-- Target Asset Categories -->
+      <div class="categories-title">Supported High-Value Asset Classes</div>
+      <div class="asset-categories">
+        <div class="category-card">
+          <div class="category-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          </div>
+          <h3>Financial & Legal Records</h3>
+          <p>Offshore docs, property deeds, corporate trusts, tax returns, and private contracts.</p>
         </div>
-        <div class="type-card">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
-          Encrypted Data & Files
+
+        <div class="category-card">
+          <div class="category-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+          </div>
+          <h3>Intellectual Property</h3>
+          <p>Unreleased source code, trade secrets, patents, algorithm formulas, and design files.</p>
         </div>
-        <div class="type-card">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-          Private Keys & Credentials
+
+        <div class="category-card">
+          <div class="category-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          </div>
+          <h3>Recovery Keys & Seeds</h3>
+          <p>Cold-storage seed phrases, private cryptographic keys, API tokens, and master passphrases.</p>
+        </div>
+
+        <div class="category-card">
+          <div class="category-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          </div>
+          <h3>Estate & Beneficiary Protocols</h3>
+          <p>Digital power-of-attorney, inheritance triggers, and dead-man's switch instructions.</p>
         </div>
       </div>
     </section>
@@ -364,10 +434,10 @@ HTML
     <section>
       <div class="grid-header">
         <div class="grid-title">
-          Stored Assets
+          Encrypted Vault Inventory
         </div>
         <button class="btn-primary" style="background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border); box-shadow: none;" onclick="openModal()">
-          + Add New Asset
+          + Deposit New Asset
         </button>
       </div>
 
@@ -376,14 +446,14 @@ HTML
         <div class="asset-card">
           <div class="asset-header">
             <div>
-              <div class="asset-name">premium-domain.com</div>
-              <div class="asset-meta">Domain Asset • Vault #01</div>
+              <div class="asset-name">Master_Trust_Deed_2026.pdf</div>
+              <div class="asset-meta">Legal & Trust Document • 8.4 MB</div>
             </div>
-            <span class="asset-tag">PROTECTED</span>
+            <span class="asset-tag">AES-256</span>
           </div>
           <div class="asset-footer">
-            <span>Hash: 0x8F...A391</span>
-            <span>AES-256</span>
+            <span>HASH: 0x9A...F182</span>
+            <span>AIR-GAPPED</span>
           </div>
         </div>
 
@@ -391,14 +461,14 @@ HTML
         <div class="asset-card">
           <div class="asset-header">
             <div>
-              <div class="asset-name">Cold_Storage_Backup.dat</div>
-              <div class="asset-meta">Encrypted File • 4.2 MB</div>
+              <div class="asset-name">Core_Algorithm_Source.tar.gz</div>
+              <div class="asset-meta">Proprietary IP • Code Vault</div>
             </div>
-            <span class="asset-tag">HIDDEN</span>
+            <span class="asset-tag">ENCRYPTED</span>
           </div>
           <div class="asset-footer">
-            <span>Hash: 0x3C...E912</span>
-            <span>AES-256</span>
+            <span>HASH: 0x4D...E309</span>
+            <span>AIR-GAPPED</span>
           </div>
         </div>
       </div>
@@ -414,21 +484,22 @@ HTML
       </div>
       <form onsubmit="event.preventDefault(); closeModal();">
         <div class="form-group">
-          <label>Asset Type</label>
+          <label>Asset Category</label>
           <select>
-            <option>Domain Name</option>
-            <option>Electronic Data / File</option>
-            <option>Cryptographic Key / Seed Phrase</option>
-            <option>Sensative Credential</option>
+            <option>Financial & Legal Records (Deeds, Trusts, Tax)</option>
+            <option>Intellectual Property & Code</option>
+            <option>Cryptographic Key / Hardware Seed Phrase</option>
+            <option>Estate Continuity & Dead-Man Switch Notes</option>
+            <option>Other Sensitive Electronic Data</option>
           </select>
         </div>
         <div class="form-group">
-          <label>Asset Label / Identifier</label>
-          <input type="text" placeholder="e.g. MyDomain.com or Key_Backup" required />
+          <label>Asset Label / Reference Identifier</label>
+          <input type="text" placeholder="e.g. Master_Trust_Deed or Cold_Wallet_Phrase" required />
         </div>
         <div class="form-group">
-          <label>Secret Payload / File Hash</label>
-          <input type="password" placeholder="Encrypted value or sensitive string" required />
+          <label>Encrypted Secret Payload / File Data</label>
+          <textarea rows="3" placeholder="Paste sensitive data, seed phrase, or upload file payload..." required></textarea>
         </div>
         <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
           Lock in Vault
