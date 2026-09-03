@@ -72,7 +72,7 @@
     .nav-actions {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.75rem;
     }
 
     .btn-secondary {
@@ -118,6 +118,7 @@
       margin: 0 auto;
       padding: 3.5rem 1.5rem;
       width: 100%;
+      flex: 1;
     }
 
     /* Hero Section */
@@ -389,6 +390,33 @@
       border-color: var(--accent-cyan);
     }
 
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .checkbox-group input {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      cursor: pointer;
+    }
+
+    .checkbox-group label {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.4;
+      cursor: pointer;
+    }
+
+    .checkbox-group a {
+      color: var(--accent-cyan);
+      text-decoration: underline;
+    }
+
     /* Services Modal Protocol Steps */
     .protocol-step {
       background: rgba(255, 255, 255, 0.03);
@@ -409,6 +437,50 @@
       font-size: 0.85rem;
       line-height: 1.45;
     }
+
+    /* Legal Section Typography */
+    .legal-content h4 {
+      color: #fff;
+      font-size: 0.95rem;
+      margin-top: 1rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .legal-content p, .legal-content ul {
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+
+    .legal-content ul {
+      padding-left: 1.2rem;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 2.5rem;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      background: rgba(7, 10, 18, 0.9);
+    }
+
+    footer a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    footer a:hover {
+      color: var(--accent-cyan);
+    }
   </style>
 </head>
 <body>
@@ -423,6 +495,7 @@
     </div>
     <div class="nav-actions">
       <button class="btn-secondary" onclick="openServicesModal()">Overview of Services</button>
+      <button class="btn-secondary" onclick="openLegalModal()">Compliance Policy</button>
       <button class="btn-primary" onclick="openModal()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
         Deposit Asset
@@ -594,12 +667,59 @@
           <label>Encrypted Secret Payload / File Data</label>
           <textarea rows="3" placeholder="Paste sensitive data, seed phrase, or upload file payload..." required></textarea>
         </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="policyAgree" required />
+          <label for="policyAgree">
+            I certify that this asset complies with our <a href="#" onclick="openLegalModal(); return false;">Prohibited Assets & Legal Compliance Policy</a> and contains no stolen material or malware.
+          </label>
+        </div>
+
         <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
           Lock in Vault
         </button>
       </form>
     </div>
   </div>
+
+  <!-- Legal & Compliance Policy Modal -->
+  <div class="modal-overlay" id="legalModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Prohibited Assets & Compliance Policy</h3>
+        <button class="close-btn" onclick="closeLegalModal()">&times;</button>
+      </div>
+      <div class="legal-content">
+        <h4>1. User Compliance & Ownership Representation</h4>
+        <p>By depositing files, cryptographic keys, or digital assets into this vault, you explicitly represent and warrant that you are the lawful owner or authorized custodian of the data, and that its possession, storage, and transmission comply with all applicable local, state, federal, and international laws.</p>
+
+        <h4>2. Prohibited Content & Illicit Material</h4>
+        <p>The use of this platform for storing, transmitting, or facilitating access to illegal materials is strictly prohibited. Prohibited items include, without limitation:</p>
+        <ul>
+          <li>Stolen intellectual property, trade secrets, or copyrighted material without authorization.</li>
+          <li>Malware, ransomware payloads, or malicious cyber tools designed to compromise computer systems.</li>
+          <li>Materials facilitating illegal financial activity, money laundering, fraud, or violations of international trade sanctions.</li>
+          <li>Unlawful or non-consensual personal data, or any content depicting child exploitation.</li>
+        </ul>
+
+        <h4>3. Zero-Knowledge Limits & Legal Cooperation</h4>
+        <p>While the platform utilizes end-to-end, zero-knowledge encryption where data cannot be inspected or decrypted by system administrators, the operator strictly cooperates with law enforcement authorities in response to valid court orders, subpoenas, and search warrants. In the event of confirmed unlawful activity or violation of these terms, the operator reserves the right to suspend accounts, terminate access protocols, and revoke access keys without prior notice.</p>
+
+        <button class="btn-primary" onclick="closeLegalModal()" style="width: 100%; justify-content: center; margin-top: 1.5rem;">
+          I Understand & Agree
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div>&copy; 2026 Digital Safe Deposit Box. Zero-Knowledge Architecture.</div>
+    <div>
+      <a href="#" onclick="openServicesModal(); return false;" style="margin-right: 1.25rem;">Services Overview</a>
+      <a href="#" onclick="openLegalModal(); return false;">Prohibited Assets & Legal Policy</a>
+    </div>
+  </footer>
 
   <script>
     function openModal() {
@@ -618,10 +738,19 @@
       document.getElementById('servicesModal').classList.remove('active');
     }
 
+    function openLegalModal() {
+      document.getElementById('legalModal').classList.add('active');
+    }
+
+    function closeLegalModal() {
+      document.getElementById('legalModal').classList.remove('active');
+    }
+
     // Close modals on outside click
     window.onclick = function(e) {
       if (e.target === document.getElementById('assetModal')) closeModal();
       if (e.target === document.getElementById('servicesModal')) closeServicesModal();
+      if (e.target === document.getElementById('legalModal')) closeLegalModal();
     };
   </script>
 </body>
